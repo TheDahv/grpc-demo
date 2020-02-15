@@ -1,0 +1,33 @@
+syntax = 'proto3';
+
+/**
+ * Specifies the generate package for Go. Otherwise it will just be the file's
+ * name.
+ */
+option go_package = "main";
+
+message Person {
+  string name = 1;
+  int32 id = 2;
+  bool has_grpc_experience = 3;
+}
+
+service People {
+  rpc Create (CreateRequest) returns (Person) {}
+  rpc Find (LookupRequest) returns (Person) {}
+  rpc List (ListRequest) returns (ListResponse) {}
+}
+
+message CreateRequest {
+  Person person = 1;
+}
+
+message LookupRequest {
+  int32 id = 1;
+}
+
+message ListRequest {}
+
+message ListResponse {
+  repeated Person people = 1;
+}
