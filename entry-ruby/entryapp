@@ -1,0 +1,4 @@
+#!/usr/bin/env -S ruby -I ./lib
+
+require_relative "app"
+App.new(ARGV).start

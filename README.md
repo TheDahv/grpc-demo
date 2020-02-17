@@ -32,6 +32,11 @@ Move the contents of the zip file such that you have this:
 
 ## gRPC
 
+## Ruby [[link]](https://grpc.io/docs/quickstart/ruby/)
+
+- Install the gem: `gem install grpc`
+- Install the Ruby protoc plugin: `gem install grpc-tools`
+
 ## Go [[link]](https://grpc.io/docs/quickstart/go/)
 
 - Install gRPC: `go get -u google.golang.org/grpc`
@@ -43,3 +48,35 @@ binaries installed by Go. Add this to your system's environment configuration:
 ```
 export PATH=$PATH:$GOPATH/bin
 ```
+
+# Running the Examples
+
+## Server
+
+This example includes a simple gRPC server in Go that allows a client to create,
+look up, and list people. It stores people in a simple in-memory datastore.
+
+To boot it up:
+
+- Navigate into `./server-go`
+- Run `go build`
+- Run `./grpc-demo`
+
+This will bind to a random free port and print out the address. Copy this port
+for later.
+
+## Data Entry Client
+
+This example includes a simple Ruby CLI app to help record new people
+information and send it to the Go server for storage.
+
+To use it, remember the port value from the example in the previous system;
+we'll reference it as `$PORT` below and you will need to replace it with your
+value:
+
+- Navigate to `entry-ruby`
+- Run `./entry-app localhost:$PORT`
+
+It will prompt you for people information to store.
+
+To stop the program, press `Ctrl+C`.
