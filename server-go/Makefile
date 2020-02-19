@@ -11,4 +11,5 @@ deps:
 	GO111MODULE=on go mod download
 
 clean:
-	@rm -f grpc-demo
+	@rm -f grpc-demo \
+	@rm -rf pkg/services

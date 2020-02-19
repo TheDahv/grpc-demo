@@ -4,7 +4,7 @@ syntax = 'proto3';
  * Specifies the generate package for Go. Otherwise it will just be the file's
  * name.
  */
-option go_package = "main";
+option go_package = "services";
 
 message Person {
   string name = 1;

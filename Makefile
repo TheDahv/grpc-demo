@@ -1,4 +1,4 @@
-GO_PROTO_FILES = ./server-go/*.pb.go
+GO_PROTO_FILES = ./server-go/pkg/person/*.pb.go
 RB_PROTO_FILES = ./entry-ruby/*.pb.rb
 
 SUBDIRS := node-app server-go
@@ -24,7 +24,8 @@ clean:
   rm -f $(GO_PROTO_FILES) $(RB_PROTO_FILES)
 
 $(GO_PROTO_FILES): *.proto
-	@protoc -I ./ ./person.proto --go_out=plugins=grpc:./server-go
+	@mkdir -p ./server-go/pkg/services && \
+	protoc -I ./ ./person.proto --go_out=plugins=grpc:./server-go/pkg/services/
 
 $(RB_PROTO_FILES): *.proto
 	@grpc_tools_ruby_protoc -I ./ --ruby_out=./entry-ruby/lib --grpc_out=./entry-ruby/lib ./person.proto
