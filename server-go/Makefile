@@ -2,7 +2,7 @@
 
 NAME = server-go
 
-SOURCES = *.go
+SOURCES = *.go pkg/**/*.go
 
 build: $(SOURCES)
 	GO111MODULE=on go build -o $(NAME)
