@@ -13,10 +13,9 @@ function App () {
   const [ people, setPeople ] = useState([]);
 
   useEffect(async () => {
-    debugger
     setStatus(STATES.LOADING);
     const response = await fetch('/api/people');
-    const { people } = await response.json();
+    const people = await response.json();
     setPeople(people);
 
     setStatus(STATES.DONE);

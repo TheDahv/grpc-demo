@@ -1,5 +1,5 @@
 GO_PROTO_FILES = ./server-go/pkg/services/*.pb.go
-RB_PROTO_FILES = ./entry-ruby/*.pb.rb
+RB_PROTO_FILES = ./entry-ruby/lib/**/*_pb.rb
 
 SUBDIRS := node-app server-go
 
@@ -32,11 +32,17 @@ $(GO_PROTO_FILES): ./proto/*.proto
 
 $(RB_PROTO_FILES): ./proto/*.proto
 	@mkdir -p entry-ruby/lib && \
+	mkdir -p entry-ruby/lib/include/google/rpc && \
 	grpc_tools_ruby_protoc \
 		-I ./proto \
 		--grpc_out=entry-ruby/lib \
 		--ruby_out=entry-ruby/lib \
-		./proto/person.proto
+		./proto/person.proto && \
+	grpc_tools_ruby_protoc \
+		-I ./proto/include/google/rpc \
+		--grpc_out=entry-ruby/lib/include/google/rpc \
+		--ruby_out=entry-ruby/lib/include/google/rpc \
+		./proto/include/google/rpc/status.proto
 
 $(SUBDIRS):
 	$(MAKE) -C $@

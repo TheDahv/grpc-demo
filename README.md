@@ -36,6 +36,7 @@ Move the contents of the zip file such that you have this:
 
 - Install the gem: `gem install grpc`
 - Install the Ruby protoc plugin: `gem install grpc-tools`
+- Install Google's Protobuf files: `gem install googleapis-common-protos -v 1.3.5`
 
 ## Go [[link]](https://grpc.io/docs/quickstart/go/)
 

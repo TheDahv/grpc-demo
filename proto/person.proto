@@ -1,5 +1,7 @@
 syntax = 'proto3';
 
+import "include/google/rpc/status.proto";
+
 /**
  * Specifies the generate package for Go. Otherwise it will just be the file's
  * name.
@@ -13,8 +15,8 @@ message Person {
 }
 
 service People {
-  rpc Create (CreateRequest) returns (Person) {}
-  rpc Find (LookupRequest) returns (Person) {}
+  rpc Create (CreateRequest) returns (CreateResponse) {}
+  rpc Find (LookupRequest) returns (LookupResponse) {}
   rpc List (ListRequest) returns (ListResponse) {}
 }
 
@@ -22,12 +24,23 @@ message CreateRequest {
   Person person = 1;
 }
 
+message CreateResponse {
+  google.rpc.Status status = 1;
+  Person person = 2;
+}
+
 message LookupRequest {
   int32 id = 1;
+}
+
+message LookupResponse {
+  google.rpc.Status status = 1;
+  Person person = 2;
 }
 
 message ListRequest {}
 
 message ListResponse {
-  repeated Person people = 1;
+  google.rpc.Status status = 1;
+  repeated Person people = 2;
 }
