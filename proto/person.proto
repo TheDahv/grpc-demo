@@ -1,6 +1,8 @@
 syntax = 'proto3';
 
-import "include/google/rpc/status.proto";
+import "google/api/annotations.proto";
+import "google/rpc/status.proto";
+import "protoc-gen-swagger/options/annotations.proto";
 
 /**
  * Specifies the generate package for Go. Otherwise it will just be the file's
@@ -8,33 +10,115 @@ import "include/google/rpc/status.proto";
  */
 option go_package = "services";
 
+// See for more options
+// https://github.com/grpc-ecosystem/grpc-gateway/blob/master/examples/proto/examplepb/a_bit_of_everything.proto
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  info: {
+    title: "gRPC People Example API";
+    version: "1.0";
+    contact: {
+      name: "David Pierce";
+      url: "https://github.com/TheDahv/grpc-demo/issues",
+      email: "signup@catfacts.com";
+    };
+  },
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "ApiKeyAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "X-Moz-API-Key";
+      }
+    }
+  }
+  security: {
+    security_requirement: {
+      key: "ApiKeyAuth";
+      value: {};
+    }
+  }
+  responses: {
+    key: "403";
+    value: {
+      description: "Returned when user does not have permission";
+    }
+  }
+  responses: {
+    key: "404";
+    value: {
+      description: "Returned when the endpoint does not exist";
+    }
+  }
+};
+
+/**
+ * A Person is a record in our system of people we know and their declared
+ * experience with gRPC
+ */
 message Person {
+  // The person's first and last name
   string name = 1;
+  // An identifier for the person
   int32 id = 2;
+  // Whether this person has declared any working experience with gRPC
   bool has_grpc_experience = 3;
 }
 
+/**
+ * The People service lets us interact with a database of people with respect to
+ * their knowledge of gRPC. Here we can find people, add new people to our
+ * records, and maintain our knowledge about them.
+ */
 service People {
-  rpc Create (CreateRequest) returns (CreateResponse) {}
-  rpc Find (LookupRequest) returns (LookupResponse) {}
-  rpc List (ListRequest) returns (ListResponse) {}
+  // Create a new record for a person.
+  rpc Create (CreateRequest) returns (CreateResponse) {
+    option (google.api.http) = {
+      post: "/people",
+      body: "*"
+    };
+  }
+
+  // Find looks up a specific person record by its id
+  rpc Find (LookupRequest) returns (LookupResponse) {
+    option (google.api.http) = {
+      get: "/people/{id}"
+    };
+  }
+
+  // List returns all people in the database in a single payload
+  //
+  // Names are returned in ID order from the database. If this payload is too
+  // large for your system, consider using the streamed approach
+  rpc List (ListRequest) returns (ListResponse) {
+    option (google.api.http) = {
+      get: "/people"
+    };
+  }
 }
 
+/**
+ * The name field is required, but the experience field will default to false if
+ * not supplied.
+ */
 message CreateRequest {
   Person person = 1;
 }
 
 message CreateResponse {
-  google.rpc.Status status = 1;
-  Person person = 2;
+  google.rpc.Status status = 1; // Return INVALID_ARGUMENT if Name is unspecified
+  Person person = 2; // The resulting Person with a new ID assigned
 }
 
 message LookupRequest {
-  int32 id = 1;
+  int32 id = 1; // id is required
 }
 
 message LookupResponse {
-  google.rpc.Status status = 1;
+  google.rpc.Status status = 1; // Returns INVALID_ARGUMENT if ID is unspecified
   Person person = 2;
 }
 

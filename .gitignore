@@ -1,1 +1,4 @@
 entry-ruby/lib
+docs
+proto/protoc-gen-swagger
+server-go/pkg/services/*.go
