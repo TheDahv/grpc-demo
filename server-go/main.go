@@ -82,6 +82,12 @@ func (s *server) Find(ctx context.Context, req *services.LookupRequest) (*servic
 		Person: nil,
 	}
 
+	if id == 0 {
+		resp.Status.Code = int32(code.Code_INVALID_ARGUMENT)
+		resp.Status.Message = "ID required"
+		return resp, nil
+	}
+
 	if person, ok := people[int(id)]; ok {
 		resp.Status.Code = int32(code.Code_OK)
 		resp.Person = person
