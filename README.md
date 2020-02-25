@@ -100,6 +100,31 @@ further, consider starting with:
 
 # Pre-Requisites
 
+## Programming Languages
+
+This example makes use of a few popular programming languages to demonstrate the
+cross-platform capabilities of gRPC. That means you should have all of those
+programming environments set up and working on your system if you want to play
+with the examples.
+
+This guide will not dive into installing programming languages since that is
+covered extensively by those communities. Please make sure the following are
+installed on your system:
+
+- [Go version 1.11 or greater](https://golang.org/doc/install)
+- [Ruby 2.5 or
+  greater](https://www.ruby-lang.org/en/documentation/installation/)
+- [Node version 10 or greater](https://nodejs.org/en/download/)
+
+## Tools
+
+The build scripts mostly make use of scripts and tools available on any
+POSIX-compatible system (so that should cover OSX and Linux). There is one tool
+I used because I didn't want to write my own command-line JSON parsing.
+
+Please make sure you have [`jq`](https://stedolan.github.io/jq/download/)
+installed on your system. It will make your life better, anyway.
+
 ## Protocol Buffers
 
 Installs the `protoc` compiler that other language plugins will use to generate
