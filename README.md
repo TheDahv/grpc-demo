@@ -63,6 +63,63 @@ holistic and battle-tested components.
 **DISCLAIMER:** I am not a gRPC expert or advocate by any means. I wanted to
 learn more about this space and gRPC is where I started.
 
+## RPC vs HTTP
+
+Programmers coming from backgrounds that don't include RPC systems might not
+have a good sense for how to compare the two approaches or why one might be
+better over the other. If you leave out things like cross-platform consistency
+and specifications -- which are really features of protobufs, not RPC systems --
+what do you get from RPC that you don't get from HTTP?
+
+In a short summary, gRPC offers:
+
+- more efficient use of TCP connections since it uses HTTP/2 by default as
+  opposed to HTTP 1.1 used in _most_ REST servers
+- bi-directional streaming from client to server on one connection
+- typically better performance under high-traffic scenarios
+- freedom to map procedures to your business problem, rather than fitting your
+  business problem onto REST
+
+There are a few tradeoffs:
+
+- there isn't strong browser support for gRPC, so you either have to look into
+  [grpc-web](https://github.com/grpc/grpc-web) or use a proxy server
+- more challenging to inspect messages in flight or debug with logging -- though
+  this is hard to do with compressed/secured messages anyway, and parsing tools
+  exist
+
+Here are a few articles to explore in-depth:
+
+- https://www.yonego.com/nl/why-milliseconds-matter/#gref
+- https://docs.microsoft.com/en-us/aspnet/core/grpc/comparison?view=aspnetcore-3.1
+- https://code.tutsplus.com/tutorials/rest-vs-grpc-battle-of-the-apis--cms-30711
+
+## gRPC vs Other RPC Frameworks
+
+Once you've settled on why a RPC might suit your problem, you may be wondering
+why gRPC over other alternatives.
+
+Some alternatives to consider include:
+
+- [Apache Thrift](https://thrift.apache.org/)
+- [JSON-RPC](https://www.jsonrpc.org/)
+- [Ice](https://zeroc.com/products/ice)
+
+Here are some things you may want to consider:
+
+- support and investment: gRPC was developed from a system in use at Google for
+  15+ years and enjoys active support from Google and other contributors
+- platform flexibility: gRPC code generation and libraries for multiple
+  languages means you can adopt it in more parts of your architecture
+- documentation and community: gRPC is documented very well and its extensive
+  community means you aren't likely to run into a problem somebody hasn't
+  already thought of
+
+Here are a few articles to explore in-depth:
+
+- https://www.hardikp.com/2018/07/28/services/
+- https://medium.com/@EdgePress/is-grpc-the-future-of-client-server-communication-b112acf9f365
+
 # Motivations
 
 There are many features and advantages to motivate an exploration into gRPC.
@@ -97,6 +154,7 @@ further, consider starting with:
 - client, server, and bi-directional message streaming
 - response codes and error messages
 - deadlines, timeouts, and cancellations
+- interceptors to add common functionality (like "middlewares")
 
 # Pre-Requisites
 
