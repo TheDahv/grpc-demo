@@ -39,7 +39,7 @@ function App () {
             h('tr', null, [
               h('td', null, person.id),
               h('td', null, person.name),
-              h('td', null, person.hasGrpcExperience ? 'Yes' : 'No'),
+              h('td', null, person.has_grpc_experience ? 'Yes' : 'No'),
             ])
           ))
         ),
