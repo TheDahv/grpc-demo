@@ -6,7 +6,7 @@ PROTOC_DIR = $(shell dirname $(PROTOC_PATH))
 PROTO_INCLUDE = "$(PROTOC_DIR)/include"
 
 # Files generated for language-specific clients and servers
-RB_PROTO_FILES = ./entry-ruby/lib/**/*_pb.rb
+RB_PROTO_FILES = ./entry-ruby/lib/*_pb.rb
 GO_PROTO_FILES = ./server-go/pkg/services/*.pb.go
 
 # Files generated for the HTTP proxy
@@ -19,11 +19,13 @@ GO_GATEWAY_PATH = $(shell cd ./server-go && go mod download -json github.com/grp
 
 SWAGGER_PROTO_DIR = $(GO_GATEWAY_PATH)/protoc-gen-swagger
 SWAGGER_PROTO_INCLUDE_DIR = proto/protoc-gen-swagger
-SWAGGER_PROTO_FILES = $(SWAGGER_PROTO_DIR)/*.proto
+SWAGGER_PROTO_FILES = $(SWAGGER_PROTO_DIR)/options/*.proto
+
+RB_SWAGGER_FILES = ./entry-ruby/lib/protoc-gen-swagger/options/*_pb.rb
 
 SUBDIRS := node-app server-go
 
-.PHONY = all build deps clean $(SUBDIRS)
+.PHONY = all build deps clean ruby_swagger_libs $(SUBDIRS)
 
 all: build deps
 
@@ -71,11 +73,22 @@ $(GO_GATEWAY_FILES): ./proto/*.proto
 		./proto/person.proto
 
 # Generates the Ruby gRPC client to build the Ruby data entry app
-$(RB_PROTO_FILES): ./proto/*.proto
+$(RB_PROTO_FILES): ./proto/*.proto ruby_swagger_libs
 	@mkdir -p entry-ruby/lib && \
 	grpc_tools_ruby_protoc \
 		-I ./proto \
 		-I $(PROTO_INCLUDE) \
+		-I $(SWAGGER_PROTO_DIR)/options \
 		--grpc_out=entry-ruby/lib \
 		--ruby_out=entry-ruby/lib \
 		./proto/person.proto
+
+ruby_swagger_libs: $(SWAGGER_PROTO_FILES)
+	@mkdir -p entry-ruby/lib/protoc-gen-swagger/options
+	@for f in $(SWAGGER_PROTO_FILES); do \
+		grpc_tools_ruby_protoc \
+			-I proto \
+			-I $(SWAGGER_PROTO_DIR)/options \
+			--ruby_out=entry-ruby/lib/protoc-gen-swagger/options \
+			$$f ; \
+	done

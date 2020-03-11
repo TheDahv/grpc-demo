@@ -25,6 +25,8 @@ const codes =
 
 // Now we read the person.proto file we wrote and Node.js will turn it into
 // JavaScript code you can use for clients.
+// TODO figure out why protoLoader can't load the protoc-gen-swagger definition.
+// This will not work unless that is commented out.
 const packageDefinition = protoLoader.loadSync(
   PROTO_PATH,
   {
@@ -33,6 +35,10 @@ const packageDefinition = protoLoader.loadSync(
     enums: String,
     defaults: true,
     oneofs: true,
+    includeDirs: [
+      process.env.PROTO_INCLUDE,
+      __dirname + '/../proto/protoc-gen-swagger'
+    ]
   });
 
 // Here is the client to read People information!
